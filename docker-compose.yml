@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: media_downloader
+      POSTGRES_USER: your_user
+      POSTGRES_PASSWORD: your_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  setwebhook:
+    image: ${DOCKER_REGISTRY-}setwebhook
+    build:
+      context: .
+      dockerfile: SetWebhook/Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=localhost;Database=media_downloader;Username=your_user;Password=your_password
+
+  telegrambotwebhook: 
+    image: ${DOCKER_REGISTRY-}telegrambotwebhook
+    build:
+      context: .
+      dockerfile: TelegramBotWebhook/Dockerfile
+    ports:
+      - "5000:8080"
+    volumes:
+      - F:/DOWNLOADS/MEDIA:/app/media
+    depends_on:
+      - postgres 
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=localhost;Database=media_downloader;Username=your_user;Password=your_password
+
+volumes:
+  postgres_data:

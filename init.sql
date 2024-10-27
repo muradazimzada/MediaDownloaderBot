@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS videos (
+    id SERIAL PRIMARY KEY,
+    link TEXT NOT NULL,
+    file_path TEXT NOT NULL
+);

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SetWebhook": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
